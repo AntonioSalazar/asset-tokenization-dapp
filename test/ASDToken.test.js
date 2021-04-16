@@ -16,7 +16,8 @@ let totalSupply;
  
 contract("Test UpStateToken", async (accounts) => {
   beforeEach(async () => {
-    instance = await ASDToken.deployed();
+    this.ASDToken = await ASDToken.new(1000000);
+    instance = this.ASDToken;
     totalSupply = await instance.totalSupply();
   });
  
@@ -41,4 +42,6 @@ contract("Test UpStateToken", async (accounts) => {
       assert(err);
     }
   });
+
+
 })
