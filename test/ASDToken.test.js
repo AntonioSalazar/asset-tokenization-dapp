@@ -1,0 +1,1 @@
+const ASDToken = artifacts.require('ASDToken')
