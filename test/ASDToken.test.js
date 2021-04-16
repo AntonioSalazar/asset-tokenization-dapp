@@ -24,7 +24,7 @@ contract("Test UpStateToken", async (accounts) => {
  
   it("Transfer tokens", async () => {
     await instance.transfer(accounts[1], 100);
-    return expect(instance.balanceOf(accounts[1])).to.eventually.be.a.bignumber.equal(
+     expect(instance.balanceOf(accounts[1])).to.eventually.be.a.bignumber.equal(
       new BN(100)
     );
   });
