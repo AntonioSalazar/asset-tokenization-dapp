@@ -1,35 +1,30 @@
 const ASDToken = artifacts.require('ASDToken');
 
-let chai = require('chai');
+const chai = require('./setupchai');
 const BN = web3.utils.BN;
-console.log(BN);
-
-const chaiBN = require('chai-bn')(BN);
-chai.use(chaiBN);
-
-let chaiAsPromised = require('chai-as-promised');
-chai.use(chaiAsPromised);
-
 const expect = chai.expect;
 let instance;
 let totalSupply;
+
+require('dotenv').config({path: "../.env"});
+
  
 contract("Test UpStateToken", async (accounts) => {
   beforeEach(async () => {
-    this.ASDToken = await ASDToken.new(1000000);
+    this.ASDToken = await ASDToken.new(process.env.INITIAL_TOKENS);
     instance = this.ASDToken;
     totalSupply = await instance.totalSupply();
   });
  
   it("Initial Supply assigned to the owner account", async () => {
-    expect(instance.balanceOf(accounts[0])).to.eventually.be.a.bignumber.equal(
+    return expect(instance.balanceOf(accounts[0])).to.eventually.be.a.bignumber.equal(
       totalSupply
     );
   });
  
   it("Transfer tokens", async () => {
     await instance.transfer(accounts[1], 100);
-    expect(instance.balanceOf(accounts[1])).to.eventually.be.a.bignumber.equal(
+    return expect(instance.balanceOf(accounts[1])).to.eventually.be.a.bignumber.equal(
       new BN(100)
     );
   });
