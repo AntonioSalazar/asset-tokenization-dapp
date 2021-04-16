@@ -1,5 +1,6 @@
 const ASDTokenCrowdsale = artifacts.require('ASDTokenCrowdsale');
 const ASDToken = artifacts.require('ASDToken');
+const KycContract = artifacts.require('KycContract');
 const chai = require('./setupchai.js');
 const BN = web3.utils.BN;
 const expect = chai.expect;
@@ -27,17 +28,11 @@ contract("Test UpStateTokenCrowdsale", async (accounts) => {
     it("Should be possible to by tokens", async () => {
         let ASDTokenInstance = await ASDToken.deployed();
         let ASDTokenCrowdsaleInstance = await ASDTokenCrowdsale.deployed();
-        let balanceBeforeAccount = await ASDTokenInstance.balanceOf.call(recipient);
-     
-        await ASDTokenCrowdsaleInstance.sendTransaction({
-            from: recipient,
-            value: web3.utils.toWei("1", "wei"),
-        })
-     
-        const afterBalance = await ASDTokenInstance.balanceOf.call(recipient)
-     
-        return expect(balanceBeforeAccount + 1).to.be.bignumber.equal(
-            afterBalance
-        );
+        let KycContractInstance = await KycContract.deployed();
+        let balanceBefore = await ASDTokenInstance.balanceOf(deployerAccount);
+        await KycContractInstance.setKycCompleted(deployerAccount, {from: deployerAccount});
+        expect(ASDTokenCrowdsaleInstance.sendTransaction({from: deployerAccount, value: web3.utils.toWei("1", "wei")})).to.be.fulfilled;
+        balanceBefore = balanceBefore.add(new BN(1));
+        return expect(ASDTokenInstance.balanceOf(deployerAccount)).to.eventually.be.a.bignumber.equal(balanceBefore);
       });
 })
