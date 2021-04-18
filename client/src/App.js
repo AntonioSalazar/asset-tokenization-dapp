@@ -6,7 +6,7 @@ import getWeb3 from "./getWeb3";
 
 
 class App extends Component {
-  state = { loaded: false, kycAddress: '0x123...' };
+  state = { loaded: false, kycAddress: '0x123...', ASDTokenAddress:  null, UserTokens: 0};
 
   componentDidMount = async () => {
     try {
@@ -33,11 +33,11 @@ class App extends Component {
         KycContract.abi,
         KycContract.networks[this.networkId] && KycContract.networks[this.networkId].address,
       );
-      
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({loaded: true});
+      this.listenToTokenTransfer();
+      this.setState({loaded: true, ASDTokenAddress: ASDTokenCrowdsale.networks[this.networkId].address}, this.updateUserTokens);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -61,6 +61,21 @@ class App extends Component {
     alert(`KYC for ${this.state.kycAddress} is completed`);
   }
 
+  updateUserTokens = async () => {
+    let UserTokens = await this.ASDTokenInstance.methods.balanceOf(this.accounts[0]).call();
+    this.setState({
+      UserTokens: UserTokens
+    })
+  }
+
+
+  listenToTokenTransfer =  () => {
+    this.ASDTokenInstance.events.Transfer({to: this.accounts[0]}).on('data', this.updateUserTokens)
+  }
+
+  handleBuyTokens = async () => {
+    await this.ASDTokenCrowdsaleInstance.methods.buyTokens(this.accounts[0]).send({from: this.accounts[0], value: this.web3.utils.toWei('1', 'wei')});
+  }
 
   render() {
     if (!this.state.loaded) {
@@ -73,6 +88,12 @@ class App extends Component {
         <h2>KYC Whitelistening </h2>
         Address to allow: <input type="text" name='kycAddress' value={this.state.kycAddress} onChange={this.handleInputChange}/>
         <button type='button' onClick={this.handleKycWhitelisting}>Whitelist Address</button>
+        <br/>
+        <h2>Buy ASD Tokens</h2>
+        <p>If you want to buy tokens, send Wei to this address: {this.state.ASDTokenAddress}</p>
+        <br/>
+        <p>You currently have: {this.state.UserTokens} ASD Tokens</p>
+        <button type='button' onClick={this.handleBuyTokens}>Buy more tokens</button>
       </div>
     );
   }
