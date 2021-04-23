@@ -86,8 +86,10 @@ class App extends Component {
         <h1>AntonioSalazarDeveloper ASD Token Sale</h1>
         <p>Get your token!</p>
         <h2>KYC Whitelistening </h2>
-        Address to allow: <input type="text" name='kycAddress' value={this.state.kycAddress} onChange={this.handleInputChange}/>
-        <button type='button' onClick={this.handleKycWhitelisting}>Whitelist Address</button>
+        <div className='kyc-btn'>
+          Address to allow: <input type="text" name='kycAddress' value={this.state.kycAddress} onChange={this.handleInputChange}/>
+          <button type='button' onClick={this.handleKycWhitelisting}>Whitelist Address</button>
+        </div>
         <br/>
         <h2>Buy ASD Tokens</h2>
         <p>If you want to buy tokens, send Wei to this address: {this.state.ASDTokenAddress}</p>
