@@ -23,8 +23,22 @@ code {
   background-color: aquamarine;
 }
 
-.kyc-btn {
-  display: flex;
-  flex-direction: column;
+.kyc-btn input {
+  display: block;
   width: 20%;
+  margin-bottom: 10px;
+}
+
+button {
+  display: block;
+  width: 10%;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: aquamarine;
+  color: #000;
+  border: 1px solid transparent;
+}
+
+button:hover {
+  border: 1px solid #000;
 }
