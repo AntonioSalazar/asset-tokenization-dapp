@@ -36,9 +36,9 @@ button {
   border-radius: 10px;
   background-color: aquamarine;
   color: #000;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
 }
 
 button:hover {
-  border: 1px solid #000;
+  border: 2px solid #000;
 }
